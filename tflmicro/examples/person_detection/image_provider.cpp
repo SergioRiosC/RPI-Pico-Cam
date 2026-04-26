@@ -1,67 +1,56 @@
 #include "image_provider.h"
 #include "model_settings.h"
-#include "hardware/gpio.h"
+#include "arducam.h"
 #include "pico/stdlib.h"
+#include "tensorflow/lite/micro/micro_time.h"
+#include <climits>
 
-// Pines cámara HM01B0 (según tu cableado confirmado)
-#define CAM_SDA   4
-#define CAM_SCL   5
-#define CAM_VSYNC 16
-#define CAM_HREF  15
-#define CAM_PCLK  14
-#define CAM_D0    6
+// Buffer temporal para frame completo de la cámara (96×96 es lo que captura arducam por defecto)
+static uint8_t raw_buffer[96 * 96];
 
-// Buffer para frame completo 324×324
-static uint8_t raw_buffer[324 * 324];
-
-// Buffer de salida 88×88×3
-static uint8_t scaled_buffer[kNumRows * kNumCols * kNumChannels];
-
-// Declaraciones externas del driver HM01B0 del repo
-extern "C" {
-  #include "HM01B0.h"
-}
-
-// Redimensiona 324×324 → 88×88 (nearest neighbor)
-static void resize_324_to_88(const uint8_t* src, uint8_t* dst_gray) {
-  const float scale = 324.0f / 88.0f;
+// Redimensiona 96×96 → 88×88 (nearest neighbor)
+static void resize_96_to_88(const uint8_t* src, uint8_t* dst) {
+  const float scale = 96.0f / 88.0f;
   for (int y = 0; y < 88; y++) {
     for (int x = 0; x < 88; x++) {
       int src_x = (int)(x * scale);
       int src_y = (int)(y * scale);
-      dst_gray[y * 88 + x] = src[(src_y * 324) + src_x];
+      dst[y * 88 + x] = src[src_y * 96 + src_x];
     }
   }
 }
 
-// Triplica canal grayscale → RGB en buffer de salida
-static void gray_to_rgb(const uint8_t* gray, uint8_t* rgb) {
-  for (int i = 0; i < kNumRows * kNumCols; i++) {
-    rgb[i * 3 + 0] = gray[i];  // R
-    rgb[i * 3 + 1] = gray[i];  // G
-    rgb[i * 3 + 2] = gray[i];  // B
+TfLiteStatus GetImage(tflite::ErrorReporter* error_reporter, int image_width,
+                      int image_height, int channels, int8_t* image_data) {
+
+  static bool first = true;
+  if (first) {
+    arducam.systemInit();
+    if (arducam.busDetect()) {
+      TF_LITE_REPORT_ERROR(error_reporter, "Bus detect failed.");
+      return kTfLiteError;
+    }
+    if (arducam.cameraProbe()) {
+      TF_LITE_REPORT_ERROR(error_reporter, "Camera probe failed.");
+      return kTfLiteError;
+    }
+    arducam.cameraInit(YUV);
+    first = false;
   }
-}
 
-TfLiteStatus GetImage(tflite::ErrorReporter* error_reporter,
-                      int image_width, int image_height, int channels,
-                      int8_t* image_data) {
+  // Captura al buffer raw
+  capture(raw_buffer);
 
-  // Captura frame 324×324
-  hm01b0_capture_frame(raw_buffer);
-
-  // Temp buffer 88×88 grayscale
+  // Buffer temporal 88×88 grayscale
   uint8_t gray88[88 * 88];
+  resize_96_to_88(raw_buffer, gray88);
 
-  // Resize
-  resize_324_to_88(raw_buffer, gray88);
-
-  // Grayscale → RGB
-  gray_to_rgb(gray88, scaled_buffer);
-
-  // Convertir uint8 [0,255] → int8 [-128,127] (cuantización INT8)
-  for (int i = 0; i < kNumRows * kNumCols * kNumChannels; i++) {
-    image_data[i] = (int8_t)((int)scaled_buffer[i] - 128);
+  // Triplicar canal grayscale → RGB + cuantizar a int8
+  for (int i = 0; i < 88 * 88; i++) {
+    int8_t val = (int8_t)((int)gray88[i] - 128);
+    image_data[i * 3 + 0] = val;  // R
+    image_data[i * 3 + 1] = val;  // G
+    image_data[i * 3 + 2] = val;  // B
   }
 
   return kTfLiteOk;
