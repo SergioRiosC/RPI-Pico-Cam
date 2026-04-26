@@ -144,6 +144,7 @@ set_target_properties(
 
 target_sources(person_detection_int8
   PRIVATE
+  ${CMAKE_CURRENT_LIST_DIR}/PicoHM01B0.cpp
   ${CMAKE_CURRENT_LIST_DIR}/detection_responder.cpp
   ${CMAKE_CURRENT_LIST_DIR}/image_provider.cpp
   ${CMAKE_CURRENT_LIST_DIR}/main.cpp
@@ -154,6 +155,7 @@ target_sources(person_detection_int8
   ${CMAKE_CURRENT_LIST_DIR}/main_functions.h
   ${CMAKE_CURRENT_LIST_DIR}/model_settings.h
   ${CMAKE_CURRENT_LIST_DIR}/person_detect_model_data.h
+  ${CMAKE_CURRENT_LIST_DIR}/PicoHM01B0.h
 )
 
 target_link_libraries(
