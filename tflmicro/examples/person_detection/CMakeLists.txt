@@ -107,6 +107,8 @@ target_sources(person_detection_test_int8
   ${CMAKE_CURRENT_LIST_DIR}/no_person_image_data.h
   ${CMAKE_CURRENT_LIST_DIR}/person_detect_model_data.h
   ${CMAKE_CURRENT_LIST_DIR}/person_image_data.h
+  ${CMAKE_CURRENT_LIST_DIR}/PicoHM01B0.cc
+  ${CMAKE_CURRENT_LIST_DIR}/PicoHM01B0.h
 )
 
 target_link_libraries(
