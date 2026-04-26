@@ -33,7 +33,7 @@ jobs:
         run: |
           cd tflmicro
           mkdir build && cd build
-          cmake .. -DPICO_BOARD=pico_w \
+          cmake .. -DPICO_BOARD=pico \
             -DCMAKE_CXX_FLAGS="-include limits"
           make -j4 blink_test
 
