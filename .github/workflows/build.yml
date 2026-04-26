@@ -35,10 +35,10 @@ jobs:
           mkdir build && cd build
           cmake .. -DPICO_BOARD=pico_w \
             -DCMAKE_CXX_FLAGS="-include limits"
-          make -j4 person_detection_int8
+          make -j4 blink_test
 
       - name: Subir .uf2 como artifact
         uses: actions/upload-artifact@v4
         with:
           name: person_detection_uf2
-          path: tflmicro/build/examples/person_detection/*.uf2
+          path: tflmicro/build/*.uf2

@@ -381,6 +381,11 @@ target_sources(pico-tflmicro_test
   ${CMAKE_CURRENT_LIST_DIR}/src/tensorflow/lite/micro/testing/test_conv_model.h
 )
 
+add_executable(blink_test blink_test.cpp)
+target_link_libraries(blink_test pico_stdlib hardware_gpio)
+pico_enable_stdio_usb(blink_test 1)
+pico_add_extra_outputs(blink_test)
+
 add_subdirectory("Arducam/src")
 add_subdirectory("examples/person_detection")
 add_subdirectory("examples/person_detection_screen")
