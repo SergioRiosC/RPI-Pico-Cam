@@ -36,6 +36,11 @@ jobs:
           cmake .. -DPICO_BOARD=pico \
             -DCMAKE_CXX_FLAGS="-include limits"
           make -j4 blink_test
+      - name: Verificar binario
+        run: |
+          ls -la tflmicro/build/blink_test.uf2
+          wc -c tflmicro/build/blink_test.uf2
+          file tflmicro/build/blink_test.uf2
 
       - name: Verificar UF2
         run: |
