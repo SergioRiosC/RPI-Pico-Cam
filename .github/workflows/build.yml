@@ -18,8 +18,10 @@ jobs:
       - name: Instalar dependencias
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake gcc-arm-none-eabi libnewlib-arm-none-eabi \
-            build-essential git python3
+          sudo apt-get install -y cmake \
+            gcc-arm-none-eabi libnewlib-arm-none-eabi \
+            build-essential git python3 \
+            libstdc++-arm-none-eabi-newlib
 
       - name: Clonar pico-sdk
         run: |
@@ -31,8 +33,9 @@ jobs:
         run: |
           cd tflmicro
           mkdir build && cd build
-          cmake .. -DPICO_BOARD=pico_w
-          make -j4 person_detection_int8
+          cmake .. -DPICO_BOARD=pico_w \
+            -DCMAKE_CXX_FLAGS="-include limits"
+          make -j4 person_detection_int88
 
       - name: Subir .uf2 como artifact
         uses: actions/upload-artifact@v4
