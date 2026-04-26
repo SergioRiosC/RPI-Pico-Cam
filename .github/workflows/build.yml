@@ -37,6 +37,12 @@ jobs:
             -DCMAKE_CXX_FLAGS="-include limits"
           make -j4 blink_test
 
+      - name: Verificar UF2
+        run: |
+          ls -la tflmicro/build/blink_test.uf2
+          hexdump -C tflmicro/build/blink_test.uf2 | head -5
+          find tflmicro/build -name "*.uf2" -ls
+
       - name: Subir .uf2 como artifact
         uses: actions/upload-artifact@v4
         with:
