@@ -123,6 +123,14 @@ add_executable(person_detection_int8 "")
 target_include_directories(person_detection_int8
   PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/.
+  ${PICO_SDK_PATH}/src/rp2_common/hardware_pio/include
+  ${PICO_SDK_PATH}/src/rp2_common/hardware_dma/include
+  ${PICO_SDK_PATH}/src/rp2_common/hardware_i2c/include
+  ${PICO_SDK_PATH}/src/rp2_common/hardware_clocks/include
+  ${PICO_SDK_PATH}/src/rp2040/hardware_regs/include
+  ${PICO_SDK_PATH}/src/rp2_common/hardware_base/include
+  ${PICO_SDK_PATH}/src/common/pico_base/include
+  ${PICO_SDK_PATH}/src/rp2040/pico_platform/include
 )
 
 set_target_properties(
