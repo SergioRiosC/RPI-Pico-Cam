@@ -28,7 +28,12 @@ jobs:
           git clone https://github.com/raspberrypi/pico-sdk.git $HOME/pico-sdk
           cd $HOME/pico-sdk && git submodule update --init
           echo "PICO_SDK_PATH=$HOME/pico-sdk" >> $GITHUB_ENV
-
+      - name: Compilar elf2uf2
+        run: |
+          mkdir -p $HOME/pico-sdk/tools/elf2uf2/build
+          cd $HOME/pico-sdk/tools/elf2uf2/build
+          cmake ..
+          make
       - name: Compilar
         run: |
           cd tflmicro
@@ -36,6 +41,13 @@ jobs:
           cmake .. -DPICO_BOARD=pico \
             -DCMAKE_CXX_FLAGS="-include limits"
           make -j4 blink_test
+
+      - name: Convertir ELF a UF2 correctamente
+        run: |
+          $HOME/pico-sdk/tools/elf2uf2/build/elf2uf2 \
+            tflmicro/build/blink_test.elf \
+            tflmicro/build/blink_test_fixed.uf2
+
       - name: Verificar binario
         run: |
           ls -la tflmicro/build/blink_test.uf2
@@ -52,4 +64,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: person_detection_uf2
-          path: tflmicro/build/blink_test.uf2
+          path: tflmicro/build/blink_test_fixed.uf2
