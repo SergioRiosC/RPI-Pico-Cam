@@ -32,7 +32,7 @@ jobs:
           cd tflmicro
           mkdir build && cd build
           cmake .. -DPICO_BOARD=pico_w
-          make -j4 person_detection
+          make -j4 person_detection_int8
 
       - name: Subir .uf2 como artifact
         uses: actions/upload-artifact@v4
