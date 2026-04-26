@@ -58,7 +58,6 @@ target_sources(person_detection_benchmark
   PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/tensorflow/lite/micro/benchmarks/person_detection_benchmark.cpp
   ${CMAKE_CURRENT_LIST_DIR}/tensorflow/lite/micro/tools/make/downloads/person_model_int8/no_person_image_data.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/tensorflow/lite/micro/tools/make/downloads/person_model_int8/person_detect_model_data.cpp
   ${CMAKE_CURRENT_LIST_DIR}/tensorflow/lite/micro/tools/make/downloads/person_model_int8/person_image_data.cpp
   ${CMAKE_CURRENT_LIST_DIR}/person_detect_model_data.h
 )
@@ -101,7 +100,6 @@ target_sources(person_detection_test_int8
   ${CMAKE_CURRENT_LIST_DIR}/model_settings.cpp
   ${CMAKE_CURRENT_LIST_DIR}/person_detection_test.cpp
   ${CMAKE_CURRENT_LIST_DIR}/tensorflow/lite/micro/tools/make/downloads/person_model_int8/no_person_image_data.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/tensorflow/lite/micro/tools/make/downloads/person_model_int8/person_detect_model_data.cpp
   ${CMAKE_CURRENT_LIST_DIR}/tensorflow/lite/micro/tools/make/downloads/person_model_int8/person_image_data.cpp
   ${CMAKE_CURRENT_LIST_DIR}/model_settings.h
   ${CMAKE_CURRENT_LIST_DIR}/no_person_image_data.h
@@ -143,7 +141,6 @@ target_sources(person_detection_int8
   ${CMAKE_CURRENT_LIST_DIR}/main.cpp
   ${CMAKE_CURRENT_LIST_DIR}/main_functions.cpp
   ${CMAKE_CURRENT_LIST_DIR}/model_settings.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/tensorflow/lite/micro/tools/make/downloads/person_model_int8/person_detect_model_data.cpp
   ${CMAKE_CURRENT_LIST_DIR}/detection_responder.h
   ${CMAKE_CURRENT_LIST_DIR}/image_provider.h
   ${CMAKE_CURRENT_LIST_DIR}/main_functions.h

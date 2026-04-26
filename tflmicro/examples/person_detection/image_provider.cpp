@@ -2,6 +2,8 @@
 #include "model_settings.h"
 #include "PicoHM01B0.h"
 #include "pico/stdlib.h"
+#include "tensorflow/lite/micro/micro_time.h"
+#include <climits>
 
 // Pines según tu cableado confirmado
 #define CAM_SDA   4
