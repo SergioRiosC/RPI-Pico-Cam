@@ -4,7 +4,7 @@
 #include <cstdio>
 
 // LED integrado del Pico W
-#define LED_PIN 25
+#define LED_PIN 22
 
 void RespondToDetection(tflite::ErrorReporter* error_reporter,
                         int8_t felino_score,

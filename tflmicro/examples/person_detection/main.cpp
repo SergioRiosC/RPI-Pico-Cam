@@ -2,7 +2,7 @@
 #include "hardware/gpio.h"
 #include "pico/stdlib.h"
 
-#define LED_PIN 25
+#define LED_PIN 22
 
 int main(int argc, char* argv[]) {
   // Inicializar LED
