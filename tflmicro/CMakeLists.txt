@@ -382,8 +382,13 @@ target_sources(pico-tflmicro_test
 )
 
 add_executable(blink_test blink_test.cpp)
-target_link_libraries(blink_test pico_stdlib hardware_gpio)
-pico_enable_stdio_usb(blink_test 1)
+target_link_libraries(blink_test 
+  pico_stdlib 
+  hardware_gpio
+  pico_runtime
+)
+pico_enable_stdio_usb(blink_test 0)
+pico_enable_stdio_uart(blink_test 0)
 pico_add_extra_outputs(blink_test)
 
 add_subdirectory("Arducam/src")
