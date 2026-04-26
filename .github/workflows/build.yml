@@ -1,0 +1,41 @@
+name: Build Person Detection UF2
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:  # permite ejecutarlo manualmente
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Instalar dependencias
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake gcc-arm-none-eabi libnewlib-arm-none-eabi \
+            build-essential git python3
+
+      - name: Clonar pico-sdk
+        run: |
+          git clone https://github.com/raspberrypi/pico-sdk.git $HOME/pico-sdk
+          cd $HOME/pico-sdk && git submodule update --init
+          echo "PICO_SDK_PATH=$HOME/pico-sdk" >> $GITHUB_ENV
+
+      - name: Compilar
+        run: |
+          cd tflmicro
+          mkdir build && cd build
+          cmake .. -DPICO_BOARD=pico_w
+          make -j4 person_detection
+
+      - name: Subir .uf2 como artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: person_detection_uf2
+          path: tflmicro/build/examples/person_detection/*.uf2
