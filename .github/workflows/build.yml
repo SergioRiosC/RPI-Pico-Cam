@@ -29,17 +29,6 @@ jobs:
           cd $HOME/pico-sdk && git submodule update --init
           echo "PICO_SDK_PATH=$HOME/pico-sdk" >> $GITHUB_ENV
 
-      - name: Compilar elf2uf2
-        run: |
-          find $HOME/pico-sdk -name "elf2uf2" -type d
-          find $HOME/pico-sdk/tools -name "CMakeLists.txt"
-
-      - name: Compilar elf2uf2
-        run: |
-          mkdir -p $HOME/pico-sdk/tools/elf2uf2/build
-          cd $HOME/pico-sdk/tools/elf2uf2/build
-          cmake ..
-          make
       - name: Compilar
         run: |
           cd tflmicro
@@ -50,9 +39,10 @@ jobs:
 
       - name: Convertir ELF a UF2 correctamente
         run: |
-          $HOME/pico-sdk/tools/elf2uf2/build/elf2uf2 \
+          tflmicro/build/_deps/picotool/picotool uf2 convert \
             tflmicro/build/blink_test.elf \
-            tflmicro/build/blink_test_fixed.uf2
+            tflmicro/build/blink_test_fixed.uf2 \
+            --family rp2040
 
       - name: Verificar binario
         run: |
